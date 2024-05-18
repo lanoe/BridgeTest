@@ -1,0 +1,21 @@
+#!/usr/bin/expect -f
+set service [lindex $argv 0]
+set ssid [lindex $argv 1]
+set passphrase [lindex $argv 2]
+set hidden [lindex $argv 3]
+set timeout 15
+spawn connmanctl
+expect "connmanctl>"
+send "agent on\r"
+expect "Agent registered"
+expect "connmanctl>"
+send "connect $service\r"
+if { $hidden eq "true" } {
+  expect "Hidden SSID name?"; 
+  send "$ssid\r"
+}
+expect "Passphrase?"
+send "$passphrase\r"
+expect "Connected $service"
+expect "connmanctl>"
+interact
